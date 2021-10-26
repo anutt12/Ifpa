@@ -29,4 +29,4 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 [Stackoverflow](stackoverflow.com)
 
 ### ERD Diagram
-[ERD Diagram!](photos/pinball app.jpeg)
+[ERD Diagram!](photos/pinball-app.jpeg)
