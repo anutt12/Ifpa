@@ -1,6 +1,7 @@
 package com.pinball.ifpa.controller;
 
 import com.pinball.ifpa.model.User;
+import com.pinball.ifpa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class UserController {
     public User getUserByEmail(@PathVariable String email) {return userService.findUserByEmail(email);}
 
     @GetMapping("/user/{name}")
-    public User getUserByName(@PathVariable String firstName, String lastName) {return userService.getUserByName(firstName, lastName);}
+    public User getUserByName(@PathVariable String name) {return userService.findUserByName(name);}
 
-    
+
 }
