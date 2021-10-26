@@ -23,3 +23,10 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 
         java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(java.util.logging.Level.OFF);
         java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
+
+[Udemy: Professional Scraping with Java](https://www.udemy.com/course/learn-web-scraping-with-java-in-just-1-hour/)
+
+[Stackoverflow](stackoverflow.com)
+
+### ERD Diagram
+[ERD Diagram!](photos/pinball app.jpeg)
