@@ -10,7 +10,7 @@ public class UserProfile {
     @Indexed(unique = true)
     private String email;
     private String mobile;
-    private Long tournamentId;
+    private String tournamentId;
     private Long rank;
     private String city;
     private String state;
