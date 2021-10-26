@@ -53,11 +53,11 @@ public class UserProfile {
         this.mobile = mobile;
     }
 
-    public Long getTournamentId() {
+    public String getTournamentId() {
         return tournamentId;
     }
 
-    public void setTournamentId(Long tournamentId) {
+    public void setTournamentId(String tournamentId) {
         this.tournamentId = tournamentId;
     }
 
