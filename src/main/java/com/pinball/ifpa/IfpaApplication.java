@@ -52,30 +52,30 @@ public class IfpaApplication {
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
 
-        try {
 
+//        for (int page = 1; page <= 5; page++) {
             //fetching the web page
 
-                HtmlPage page = webClient.getPage("https://books.toscrape.com/catalogue/page-");
-
+            HtmlPage page = webClient.getPage("https://www.ifpapinball.com/rankings/overall.php?s=w&t=500&p=1");
+//            try {
                 //selecting all headings
-                DomNodeList<DomNode> headings = page.querySelectorAll("p, h3");
+                DomNodeList<DomNode> headings = page.querySelectorAll("tr");
 
-            if (headings.isEmpty()) {
-                System.out.println("No items found.");
-            } else {
-                //iterating and extracting
-                for (DomNode content : headings) {
-                    System.out.println(content.asText());
+//                if (headings.isEmpty()) {
+//                    System.out.println("No items found.");
+//                } else {
+                    //iterating and extracting
+                    for (DomNode content : headings) {
+                        System.out.println(content.asText());
 
-                    ObjectMapper mapper = new ObjectMapper();
-                    String jsonString = mapper.writeValueAsString(headings);
-                    System.out.println(jsonString);
+//                        ObjectMapper mapper = new ObjectMapper();
+//                        String jsonString = mapper.writeValueAsString(headings);
+//                        System.out.println(jsonString);
+                    }
                 }
+//            } catch (Exception e) {
+//                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-}
+
+
