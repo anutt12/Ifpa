@@ -1,6 +1,7 @@
 package com.pinball.ifpa.service;
 
 import com.pinball.ifpa.model.User;
+import com.pinball.ifpa.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,5 @@ public class UserServiceImpl implements UserService{
     public User findUserByEmail(String email) {return userRepository.findByEmail(email);}
 
     @Override
-    public User getUserByName(String name) {return userRepository.findUserByName(name);}
+    public User findUserByName(String name) {return userRepository.findUserByName(name);}
 }
