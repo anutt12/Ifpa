@@ -1,5 +1,6 @@
 package com.pinball.ifpa;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -51,19 +52,30 @@ public class IfpaApplication {
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
 
-        //fetching the web page
-        HtmlPage page = webClient.getPage("http://books.toscrape.com/index.html");
+        try {
 
-        //selecting all headings
-        DomNodeList<DomNode> headings = page.querySelectorAll("p, h3");
+            //fetching the web page
 
-        //iterating and extracting
-        for (DomNode content: headings) {
-            System.out.println(content.asText());
+                HtmlPage page = webClient.getPage("https://books.toscrape.com/catalogue/page-");
+
+                //selecting all headings
+                DomNodeList<DomNode> headings = page.querySelectorAll("p, h3");
+
+            if (headings.isEmpty()) {
+                System.out.println("No items found.");
+            } else {
+                //iterating and extracting
+                for (DomNode content : headings) {
+                    System.out.println(content.asText());
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    String jsonString = mapper.writeValueAsString(headings);
+                    System.out.println(jsonString);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
-
-
 
 }
