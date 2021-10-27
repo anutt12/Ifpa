@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.lang.annotation.Annotation;
 
 @Document
-public class WorldRankings {
+public class WorldRankings  {
 
     private String name;
     // World Pinball Player Rankings
