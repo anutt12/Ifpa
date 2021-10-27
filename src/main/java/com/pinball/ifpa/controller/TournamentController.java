@@ -19,9 +19,14 @@ public class TournamentController {
         return tournamentService.listTournaments();
     }
 
-    @PostMapping
+    @GetMapping("tournaments/{tournament_id}")
+    public Tournament findByTournamentById(@PathVariable String tournamentId){
+        return tournamentService.findByTournamentById(tournamentId);
+    }
+
+    @PostMapping("/tournaments")
     public Tournament saveTournament(@RequestBody Tournament tournament){
-        return tournamentService.saveTournment(tournament);
+        return tournamentService.saveTournament(tournament);
     }
 
 }

@@ -6,8 +6,10 @@ import java.util.List;
 
 public interface TournamentService {
 
-    public Tournament saveTournment(Tournament tournament);
+    Tournament saveTournament(Tournament tournament);
 
-    public List<Tournament> listTournaments();
+    List<Tournament> listTournaments();
+
+    Tournament findByTournamentById(String tournamentId);
 
 }

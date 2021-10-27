@@ -14,12 +14,18 @@ public class TournamentServiceImpl implements TournamentService {
     TournamentRepository tournamentRepository;
 
     @Override
-    public Tournament saveTournment(Tournament tournament) {
-        return null;
+    public Tournament saveTournament(Tournament tournament) {
+        return tournamentRepository.save(tournament);
     }
 
     @Override
     public List<Tournament> listTournaments() {
-        return null;
+        return tournamentRepository.findAll();
     }
+
+    @Override
+    public Tournament findByTournamentById(String tournamentId) {
+        return tournamentRepository.findByTournamentById(tournamentId);
+    }
+
 }
