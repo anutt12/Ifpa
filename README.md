@@ -32,6 +32,7 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 [Scraping Bee: Introduction to Web Scraping with Java](https://www.scrapingbee.com/blog/introduction-to-web-scraping-with-java/)
 
 >
+
 public class SearchResult {
 
     private final String rank;
@@ -106,5 +107,27 @@ public class SearchResult {
                 '}';
     }
 }  
+
+>
+
+ HtmlTable searchResult = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
+
+                final String rank = searchResult.asText();
+                final String name = searchResult.asText();
+                final String location = searchResult.asText();
+                final String wppr = searchResult.asText();
+                final String rating = searchResult.asText();
+                final String effPct = searchResult.asText();
+                final String bestTournamentName = searchResult.asText();
+
+                resultList.add((new SearchResult(rank, name, location, wppr, rating, effPct, bestTournamentName)));
+//                System.out.println(attributes.asText());
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File("results.json"), resultList);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+
+
+    }  
 ### ERD Diagram
 ![ERD Diagram](photos/pinball-app.jpeg)
