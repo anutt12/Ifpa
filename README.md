@@ -5,7 +5,8 @@
 We first tried a simple jsoup crawler on [Books to Scrape](http://books.toscrape.com/index.html). The jsoup method successfully returned the endpoints and titles of the books on the home page. We decided to comment this code out and try the HtmlUnit because it allows us to block CSS and JavaScript to help simplify getting a website's data.  
 
 We explored both options in the tutorial and found we understood the HtmlUnit method better. We removed the jsoup code that we tested scraping different types of data:  
->         Document page = Jsoup.connect("http://books.toscrape.com/index.html").get();
+>       
+        Document page = Jsoup.connect("http://books.toscrape.com/index.html").get();
 
         //selecting all hyperlinks
         Elements pageElements = page.select("a[href]");

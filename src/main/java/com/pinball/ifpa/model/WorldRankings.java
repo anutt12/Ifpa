@@ -2,6 +2,8 @@ package com.pinball.ifpa.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.lang.annotation.Annotation;
+
 @Document
 public class WorldRankings {
 
@@ -55,4 +57,5 @@ public class WorldRankings {
     public void setRank(String rank) {
         this.rank = rank;
     }
+
 }
