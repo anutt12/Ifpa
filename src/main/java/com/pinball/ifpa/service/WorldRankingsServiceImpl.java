@@ -24,7 +24,7 @@ public class WorldRankingsServiceImpl implements WorldRankingsService {
     }
 
     @Override
-    public WorldRankings findAllByRank(String rank) {
-        return worldRankingsRepository.findAllByRank(rank);
+    public WorldRankings findByRank(String rank) {
+        return worldRankingsRepository.findByRank(rank);
     }
 }

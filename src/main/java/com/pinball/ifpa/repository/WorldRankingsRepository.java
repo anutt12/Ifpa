@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface WorldRankingsRepository extends MongoRepository<WorldRankings, String> {
 
     @Query("{'worldRankings.rank': 0?}")
-    public WorldRankings findAllByRank(String rank);
+    public WorldRankings findByRank (String rank);
 
 }
