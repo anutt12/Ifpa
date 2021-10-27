@@ -31,7 +31,7 @@ public class IfpaApplication {
 
             HtmlPage page = webClient.getPage("https://www.ifpapinball.com/rankings/overall.php?s=w&t=500&p=1");
 
-
+            // this code isolates only the top 500 players in order and prevents other sections from printing
             HtmlTable attributes = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
 
                 System.out.println(attributes.asText());
