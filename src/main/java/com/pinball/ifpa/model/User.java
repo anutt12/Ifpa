@@ -19,8 +19,7 @@ public class User {
     private UserProfile userProfile;
 
     @DBRef
-    private List<Tournament> tournament;
-
+    private List<WorldRankings> worldRankings;
 
     public User() {
     }
