@@ -52,9 +52,8 @@ public class IfpaApplication {
 //      *****Returns Individual Cell data*****
 //            System.out.println(attributes.asText());
             for (final HtmlTableRow row : attributes.getRows()) {
-                for(final HtmlTableCell cell : row.getCells()){
-                    System.out.println(cell);
-                    }
+                for (final HtmlTableCell cell : row.getCells()) {
+                    System.out.println(cell.asText());
                 }
             }
 
@@ -64,6 +63,7 @@ public class IfpaApplication {
         }
     }
 }
+
 
 
 
