@@ -10,4 +10,5 @@ public interface WorldRankingsService {
 
     public List<WorldRankings> listWorldRankings();
 
+    public WorldRankings findByRank(String rank);
 }

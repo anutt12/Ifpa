@@ -19,6 +19,9 @@ public class WorldRankingsController {
         return worldRankingsService.listWorldRankings();
     }
 
+    @GetMapping("/world_rankings/{rank}")
+    public WorldRankings getByRank(@PathVariable String rank) {return worldRankingsService.findByRank(rank);}
+
     @PostMapping
     public WorldRankings saveWorldRankings(@RequestBody WorldRankings worldRankings){
         return worldRankingsService.saveWorldRankings(worldRankings);

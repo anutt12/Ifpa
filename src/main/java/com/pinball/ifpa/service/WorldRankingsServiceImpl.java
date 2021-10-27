@@ -15,11 +15,16 @@ public class WorldRankingsServiceImpl implements WorldRankingsService {
 
     @Override
     public WorldRankings saveWorldRankings(WorldRankings worldRankings) {
-        return null;
+        return worldRankingsRepository.save(worldRankings);
     }
 
     @Override
     public List<WorldRankings> listWorldRankings() {
-        return null;
+        return worldRankingsRepository.findAll();
+    }
+
+    @Override
+    public WorldRankings findByRank(String rank) {
+        return worldRankingsRepository.findByRank(rank);
     }
 }
