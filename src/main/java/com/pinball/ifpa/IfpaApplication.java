@@ -1,16 +1,25 @@
 package com.pinball.ifpa;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.mongodb.DBObject;
+import com.mongodb.MongoWriteException;
+import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.BulkWriteOptions;
+import com.mongodb.client.model.InsertOneModel;
 import com.pinball.ifpa.model.WorldRankings;
+import net.minidev.json.JSONObject;
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -24,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
-
 @SpringBootApplication
 public class IfpaApplication {
 
@@ -33,11 +40,12 @@ public class IfpaApplication {
 
     public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 
-//        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
-//        MongoDatabase database = mongoClient.getDatabase("pinball_db");
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+        MongoDatabase database = mongoClient.getDatabase("pinball_db");
 //        database.createCollection("WorldRankings");
 //        System.out.println("Collection created successfully");
-//        MongoCollection<Document> collection = database.getCollection("WorldRankings");
+        MongoCollection<org.bson.Document> collection = database.getCollection("WorldRankings");
+
 
         try {
             WebClient webClient = new WebClient(BrowserVersion.CHROME);
@@ -64,10 +72,10 @@ public class IfpaApplication {
             bufferedWriter.write(rankings.asText());
             bufferedWriter.close();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Pattern pattern = Pattern.compile("\t");
         try (BufferedReader in = new BufferedReader(new FileReader("rankings.csv"));) {
             List<WorldRankings> worldRankings = in.lines().skip(1).map(line -> {
@@ -76,11 +84,45 @@ public class IfpaApplication {
             }).collect(Collectors.toList());
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(System.out, worldRankings);
+            mapper.writeValue(new File("results.json"), worldRankings);
+
+        }
+
+
+        try {
+            //drop previous import
+            collection.drop();
+
+            //Bulk Approach:
+            int count = 0;
+            int batch = 100;
+            List<InsertOneModel<Document>> docs = new ArrayList<>();
+
+            try (BufferedReader br = new BufferedReader(new FileReader("results.json"))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    docs.add(new InsertOneModel<>(Document.parse(line)));
+                    count++;
+                    if (count == batch) {
+                        collection.bulkWrite(docs, new BulkWriteOptions().ordered(false));
+                        docs.clear();
+                        count = 0;
+                    }
+                }
+            }
+
+            if (count > 0) {
+                BulkWriteResult bulkWriteResult = collection.bulkWrite(docs, new BulkWriteOptions().ordered(false));
+                System.out.println("Inserted" + bulkWriteResult);
+            }
+
+        } catch (MongoWriteException e) {
+            System.out.println("Error");
         }
     }
-
 }
+
+
 
 
 

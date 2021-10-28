@@ -6,6 +6,7 @@ We first tried a simple jsoup crawler on [Books to Scrape](http://books.toscrape
 
 We explored both options in the tutorial and found we understood the HtmlUnit method better. We removed the jsoup code that we tested scraping different types of data:  
 >       
+        
         Document page = Jsoup.connect("http://books.toscrape.com/index.html").get();
 
         //selecting all hyperlinks
@@ -31,9 +32,11 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 
 [Scraping Bee: Introduction to Web Scraping with Java](https://www.scrapingbee.com/blog/introduction-to-web-scraping-with-java/)
 
+We then created a class to set up a plain old Java object (POJO) to convert the data to a JSON file. Unfortunately 
+
 >
 
-public class SearchResult {
+    public class SearchResult {
 
     private final String rank;
     private final String name;
@@ -105,12 +108,12 @@ public class SearchResult {
                 ", effPct='" + effPct + '\'' +
                 ", bestTournamentName='" + bestTournamentName + '\'' +
                 '}';
+        }
     }
-}  
 
 >
-
- HtmlTable searchResult = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
+        
+        HtmlTable searchResult = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
 
                 final String rank = searchResult.asText();
                 final String name = searchResult.asText();
@@ -121,13 +124,12 @@ public class SearchResult {
                 final String bestTournamentName = searchResult.asText();
 
                 resultList.add((new SearchResult(rank, name, location, wppr, rating, effPct, bestTournamentName)));
-//                System.out.println(attributes.asText());
+            System.out.println(attributes.asText());
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File("results.json"), resultList);
             } catch(Exception e){
                 e.printStackTrace();
             }
-
-
     }  
+    
 ### ERD Diagram
 ![ERD Diagram](photos/pinball-app.jpeg)
