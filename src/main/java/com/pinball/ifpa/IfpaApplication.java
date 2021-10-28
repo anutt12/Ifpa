@@ -1,35 +1,25 @@
 package com.pinball.ifpa;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.mongodb.DBObject;
-import com.mongodb.MongoWriteException;
-import com.mongodb.bulk.BulkWriteResult;
+import com.google.gson.Gson;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.BulkWriteOptions;
-import com.mongodb.client.model.InsertOneModel;
+import com.pinball.ifpa.exception.InformationExistException;
 import com.pinball.ifpa.model.WorldRankings;
-import net.minidev.json.JSONObject;
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.*;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -38,14 +28,41 @@ public class IfpaApplication {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
-
+    public static void readFromJSON() throws FileNotFoundException {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
         MongoDatabase database = mongoClient.getDatabase("pinball_db");
-//        database.createCollection("WorldRankings");
-//        System.out.println("Collection created successfully");
-        MongoCollection<org.bson.Document> collection = database.getCollection("WorldRankings");
 
+        try {
+            database.createCollection("WorldRankings");
+            System.out.println("Collection created successfully");
+        } catch (MongoException e) {
+            System.out.println(e);
+        }
+
+        MongoCollection<org.bson.Document> collection = database.getCollection("WorldRankings");
+        System.out.println("Collection WorldRankings selected successfully");
+
+        System.out.println("Calling readFromJSON");
+        Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new FileReader("results.json"));
+//        JsonModel [] jsonModels = gson.fromJson(br, JsonModel[].class);
+        WorldRankings[] worldRankings = gson.fromJson(br, WorldRankings[].class);
+
+        for (WorldRankings myObj : worldRankings) {
+            Document document = new Document();
+            document.append("rank", myObj.getRank());
+            document.append("name", myObj.getName());
+            document.append("location", myObj.getLocation());
+            document.append("wppr", myObj.getWppr());
+            document.append("rating", myObj.getRating());
+            document.append("effPct", myObj.getEffPct());
+            document.append("bestTournament", myObj.getBestTournament());
+            collection.insertOne(document);
+            System.out.println("document is inserted");
+        }
+    }
+
+    public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 
         try {
             WebClient webClient = new WebClient(BrowserVersion.CHROME);
@@ -70,6 +87,7 @@ public class IfpaApplication {
             FileWriter fileWriter = new FileWriter(fileOut, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(rankings.asText());
+            System.out.println("rankings.csv updated");
             bufferedWriter.close();
 
         } catch (Exception e) {
@@ -85,40 +103,10 @@ public class IfpaApplication {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.writeValue(new File("results.json"), worldRankings);
-
+            System.out.println("results.json updated");
         }
 
-
-        try {
-            //drop previous import
-            collection.drop();
-
-            //Bulk Approach:
-            int count = 0;
-            int batch = 100;
-            List<InsertOneModel<Document>> docs = new ArrayList<>();
-
-            try (BufferedReader br = new BufferedReader(new FileReader("results.json"))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    docs.add(new InsertOneModel<>(Document.parse(line)));
-                    count++;
-                    if (count == batch) {
-                        collection.bulkWrite(docs, new BulkWriteOptions().ordered(false));
-                        docs.clear();
-                        count = 0;
-                    }
-                }
-            }
-
-            if (count > 0) {
-                BulkWriteResult bulkWriteResult = collection.bulkWrite(docs, new BulkWriteOptions().ordered(false));
-                System.out.println("Inserted" + bulkWriteResult);
-            }
-
-        } catch (MongoWriteException e) {
-            System.out.println("Error");
-        }
+        readFromJSON();
     }
 }
 
