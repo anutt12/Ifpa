@@ -1,4 +1,4 @@
-# ifpa
+# International Flipper Pinball Association
 
 
 **User Stories -**  
@@ -185,3 +185,10 @@ Reviewing the site indicates that there is currently not a way to sign up for th
 ![ERD Diagram](photos/pinball-app.jpeg)
 
 ![ERD Diagram](photos/ifpa.png)
+
+## HTTP Path Mappings
+| **HTTP REQUEST** | **PATH** | **DESCRIPTION** |
+| ---------------- | -------- | --------------- |
+| GET | /api/world_rankings/ | Retrieve all rankings |  
+| PUT | /api/world_rankings/ | Update all rankings |  
+
