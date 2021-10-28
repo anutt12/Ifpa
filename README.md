@@ -1,5 +1,44 @@
 # ifpa
 
+
+**User Stories -**  
+
+**Bronze level:** 
+
+* As a user I want to be able to create an account with the IFPA 
+
+* As a user I want to be able to login to my account 
+
+* As a user I want to be able to view my profile 
+
+* As a user I want to be able to view other players’ profiles 
+
+* As a user I want to be able to view my stats 
+
+* As a user I want to be able to view other players’ stats 
+
+* As a user I want to be able to see my ranking 
+
+* As a user I want to be able to see the ranking of other players 
+
+**Silver level:** 
+
+* As a user I want to be able to view individual tournament results 
+
+* As a user I want to be able to view upcoming tournaments 
+
+**Gold level:** 
+
+* As a user I want to be able to sign up for upcoming tournaments 
+
+* As a user I want to be able to link my personal profile my public profile on the site 
+
+**Platinum level:** 
+
+* As an admin I want to be able to update results from tournaments 
+
+* As an admin I want to be able to add upcoming tournaments 
+
 ### Resources
 [Web Scraping Tutorial](https://zenscrape.com/java-web-scraping-comprehensive-tutorial/)  
 We first tried a simple jsoup crawler on [Books to Scrape](http://books.toscrape.com/index.html). The jsoup method successfully returned the endpoints and titles of the books on the home page. We decided to comment this code out and try the HtmlUnit because it allows us to block CSS and JavaScript to help simplify getting a website's data.  
@@ -34,7 +73,7 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 
 [How to Convert CSV to JSON in Java](https://dzone.com/articles/how-to-convert-csv-to-json-in-java)
 
-We then created a class to set up a plain old Java object (POJO) to convert the data to a JSON file. Unfortunately 
+We then created a class to set up a plain old Java object (POJO) to convert the data to a JSON file.  We did find success in doing this, however it became clear very quickly that pushing that data to MongoDb was going to be a difficult task. Originally we thought we could push the scraped data directly to the database. There is potentially a way to do this, however we were unable to figure it out. The data may also not have been formatted properly if we had done that. Since we were pulling a data table from the site, it seems that scraping to a CSV file and then converting to a Json file was the only way we could ensure that the data would be formatted properly. After quite a bit of research and failed attempts, we did have to reach out for help with pushing the data to MongoDb. We still need to write out the code to schedule how often the program scrapes from the website, as well as the "next page" function to get all of the data. We stuck with 500 entries during build and testing as there are over 81,000 entries and we didn't feel it necessary to pull that much data at this time. Future plans would also include extending the scraper to retrieve data from the other parts of the site. 
 
 
 >
@@ -134,8 +173,15 @@ We then created a class to set up a plain old Java object (POJO) to convert the 
                 e.printStackTrace();
             }
     }  
-   
+    
+
+
+Reviewing the site indicates that there is currently not a way to sign up for the site outside of emailing the admins. Even doing this would not link your account to your player profile by design. This would be something to potentially build out in future versions. We did build out the program to handle the other aspects of the site we are pulling from, however the unexpected time consumption of building a working scraper, formating the data properly, and then commiting to the DB prevented us from implementing those parts at this time. While the amount of research and failed attempts were extremely frustrating and time consuming, we both found it to be beneficial as a learning experience. 
+    
+     
    
     
 ### ERD Diagram
 ![ERD Diagram](photos/pinball-app.jpeg)
+
+![ERD Diagram](photos/ifpa.png)
