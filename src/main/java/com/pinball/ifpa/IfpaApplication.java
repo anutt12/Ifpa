@@ -1,6 +1,7 @@
 package com.pinball.ifpa;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -15,14 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+
 
 @SpringBootApplication
 public class IfpaApplication {
@@ -56,16 +58,28 @@ public class IfpaApplication {
 
             // this code isolates only the top 500 players in order and converts each data type to a cell
 
-                File fileOut = new File("rankings.csv");
-                FileWriter fileWriter = new FileWriter(fileOut, true);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                    bufferedWriter.write(rankings.asText());
-                    bufferedWriter.close();
+            File fileOut = new File("rankings.csv");
+            FileWriter fileWriter = new FileWriter(fileOut, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(rankings.asText());
+            bufferedWriter.close();
 
-        } catch (Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        Pattern pattern = Pattern.compile("\t");
+        try (BufferedReader in = new BufferedReader(new FileReader("rankings.csv"));) {
+            List<WorldRankings> worldRankings = in.lines().skip(1).map(line -> {
+                String[] x = pattern.split(line);
+                return new WorldRankings(x[0], x[1], x[2], x[3], x[4], x[5], x[6]);
+            }).collect(Collectors.toList());
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.writeValue(System.out, worldRankings);
+        }
     }
+
 }
 
 
