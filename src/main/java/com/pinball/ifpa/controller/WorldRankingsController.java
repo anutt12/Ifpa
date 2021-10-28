@@ -8,23 +8,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/world_rankings")
+@RequestMapping("/api")
 public class WorldRankingsController {
 
     @Autowired
     WorldRankingsService worldRankingsService;
 
-    @GetMapping
-    public List<WorldRankings> worldRankingsList(){
-        return worldRankingsService.listWorldRankings();
-    }
+//    @GetMapping("/world_rankings")
+//    public List<WorldRankings> worldRankingsList(){
+//        return worldRankingsService.listWorldRankings();
+//    }
 
     @GetMapping("/world_rankings/{rank}")
     public WorldRankings getByRank(@PathVariable String rank) {return worldRankingsService.findByRank(rank);}
 
-    @PostMapping
+    @GetMapping("/world_rankings")
+    public WorldRankings getAllByRankOrderByRank(@RequestBody WorldRankings worldRankings){
+        return worldRankingsService.getAllByRankOrderByRank(worldRankings);
+    }
+
+    @PutMapping("/world_rankings")
     public WorldRankings saveWorldRankings(@RequestBody WorldRankings worldRankings){
-        return worldRankingsService.saveWorldRankings(worldRankings);
+        return worldRankingsService.getAllByRankOrderByRank(worldRankings);
     }
 
 }
