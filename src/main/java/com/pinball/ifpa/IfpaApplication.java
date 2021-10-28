@@ -14,6 +14,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.pinball.ifpa.model.WorldRankings;
 import org.bson.Document;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.*;
@@ -62,7 +63,7 @@ public class IfpaApplication {
     }
 
     public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
-
+        SpringApplication.run(IfpaApplication.class, args);
         try {
             WebClient webClient = new WebClient(BrowserVersion.CHROME);
 
