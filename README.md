@@ -32,11 +32,14 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 
 [Scraping Bee: Introduction to Web Scraping with Java](https://www.scrapingbee.com/blog/introduction-to-web-scraping-with-java/)
 
+[How to Convert CSV to JSON in Java](https://dzone.com/articles/how-to-convert-csv-to-json-in-java)
+
 We then created a class to set up a plain old Java object (POJO) to convert the data to a JSON file. Unfortunately 
+
 
 >
 
-    public class SearchResult {
+     public class SearchResult {
 
     private final String rank;
     private final String name;
@@ -110,10 +113,11 @@ We then created a class to set up a plain old Java object (POJO) to convert the 
                 '}';
         }
     }
-
->
+    
+   
         
-        HtmlTable searchResult = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
+ >      
+          HtmlTable searchResult = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
 
                 final String rank = searchResult.asText();
                 final String name = searchResult.asText();
@@ -130,6 +134,8 @@ We then created a class to set up a plain old Java object (POJO) to convert the 
                 e.printStackTrace();
             }
     }  
+   
+   
     
 ### ERD Diagram
 ![ERD Diagram](photos/pinball-app.jpeg)
