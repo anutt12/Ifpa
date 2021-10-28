@@ -32,6 +32,8 @@ We explored both options in the tutorial and found we understood the HtmlUnit me
 
 [Scraping Bee: Introduction to Web Scraping with Java](https://www.scrapingbee.com/blog/introduction-to-web-scraping-with-java/)
 
+We then created a class to set up a plain old Java object (POJO) to convert the data to a JSON file. Unfortunately 
+
 >
 
     public class SearchResult {
