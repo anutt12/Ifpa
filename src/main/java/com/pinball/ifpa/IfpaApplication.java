@@ -1,11 +1,10 @@
 package com.pinball.ifpa;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -16,19 +15,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class IfpaApplication {
 
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 
+//        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+//        MongoDatabase database = mongoClient.getDatabase("pinball_db");
+//        database.createCollection("WorldRankings");
+//        System.out.println("Collection created successfully");
+//        MongoCollection<Document> collection = database.getCollection("WorldRankings");
 
         try {
             WebClient webClient = new WebClient(BrowserVersion.CHROME);
-
 
             //configuring options
             webClient.getOptions().setUseInsecureSSL(true);
@@ -41,28 +51,23 @@ public class IfpaApplication {
 
             HtmlPage page = webClient.getPage("https://www.ifpapinball.com/rankings/overall.php?s=w&t=500&p=1");
 
-            // this code isolates only the top 500 players in order and prevents other sections from printing
-            HtmlTable attributes = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
+            // isolating the ranking table
+            HtmlTable rankings = (HtmlTable) page.getByXPath("//table[@class='table table-striped table-hover table-sm']").get(0);
 
-//            for (int i = 0; i < attributes.getRowCount(); i++) {
-//                for (int j = 0; j < attributes.getEndColumnNumber(); j++) {
-//                    System.out.println(attributes.getCellAt(1, 3));
-//                }
-//            }
-//      *****Returns Individual Cell data*****
-//            System.out.println(attributes.asText());
-            for (final HtmlTableRow row : attributes.getRows()) {
-                for (final HtmlTableCell cell : row.getCells()) {
-                    System.out.println(cell.asText());
-                }
-            }
+            // this code isolates only the top 500 players in order and converts each data type to a cell
 
+                File fileOut = new File("rankings.csv");
+                FileWriter fileWriter = new FileWriter(fileOut, true);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                    bufferedWriter.write(rankings.asText());
+                    bufferedWriter.close();
 
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 }
+
 
 
 
